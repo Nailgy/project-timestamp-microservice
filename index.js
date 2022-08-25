@@ -1,4 +1,4 @@
-// index.js
+// index.jshttps://project-timestamp-microservice.illianalivaiko.repl.co
 // where your node app starts
 
 // init project
@@ -24,7 +24,20 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
+app.get('/api/:date?', (req, res) => {
+  const regex = /^[0-9]+$/;
+  const parsedDate = regex.test(req.params.date) 
+    ? Number(req.params.date)
+    : req.params.date;
+  const date = (parsedDate) 
+    ? new Date(parsedDate)
+    : new Date();
+  if ((date !== "Invalid Date") && !isNaN(date)) {
+    const unix = date.getTime();
+    const utc = date.toUTCString();
+    res.json({ unix, utc });
+  } else res.json({ error: "Invalid Date" })
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
